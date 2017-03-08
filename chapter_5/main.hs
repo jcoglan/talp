@@ -2,6 +2,9 @@ import Prelude hiding (and, or, not, fst, snd)
 import Lambda
 
 
+byValue = eval callByValue print
+normal  = eval normalOrder print
+
 section :: Char -> IO ()
 section c = putStrLn $ replicate 72 c
 
@@ -22,19 +25,19 @@ main = do
 
   section '='
   putStrLn "[Full beta reduction]"
-  eval print fullBeta t
+  eval fullBeta print t
 
   section '='
   putStrLn "[Normal order]"
-  eval print normalOrder t
+  eval normalOrder print t
 
   section '='
   putStrLn "[Call by name]"
-  eval print callByName t
+  eval callByName print t
 
   section '='
   putStrLn "[Call by value]"
-  eval print callByValue t
+  eval callByValue print t
 
   section '='
   putStrLn "[Test]"

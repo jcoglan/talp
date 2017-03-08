@@ -144,24 +144,18 @@ termDiff x y
   | x == y                            =  x
   | otherwise                         =  DiffTerm x
 
-eval :: (LTerm -> IO ()) -> (LTerm -> LTerm) -> LTerm -> IO ()
-eval effect strategy term = do
-  effect $ termDiff term reduced
-  putStrLn ""
-  when (term /= reduced) $ eval effect strategy reduced
+eval :: (LTerm -> LTerm) -> (LTerm -> IO ()) -> LTerm -> IO ()
+eval strategy effect term =
+  if term == reduced then
+    print term
+  else do
+    effect (termDiff term reduced)
+    eval strategy effect reduced
   where
     reduced = strategy term
 
-byValue = eval print callByValue
-normal  = eval print normalOrder
-
-norm term = do
-  if term == reduced then
-    print term
-  else
-    norm reduced
-  where
-    reduced = normalOrder term
+noop :: (Monad m) => a -> m ()
+noop x = return ()
 
 
 -- Syntax sugar
