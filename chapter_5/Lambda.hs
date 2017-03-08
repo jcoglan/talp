@@ -207,16 +207,16 @@ c n         =  lam "sz" $ body n
     body 0  =  var 'z'
     body n  =  var 's' <~ body (n - 1)
 
-scc   = lam "nsz" $ var 's' <~ (var 'n' <~ var 's' <~ var 'z')
+scc = lam "nsz" $ var 's' <~ (var 'n' <~ var 's' <~ var 'z')
 
 -- Exercise 5.2.2
-scc2  = lam "nsz" $ var 'n' <~ var 's' <~ (var 's' <~ var 'z')
+scc' = lam "nsz" $ var 'n' <~ var 's' <~ (var 's' <~ var 'z')
 
 plus  = lam "mnsz" $ var 'm' <~ var 's' <~ (var 'n' <~ var 's' <~ var 'z')
 times = lam "mn" $ var 'm' <~ (plus <~ var 'n') <~ c 0
 
 -- Exercise 5.2.3
--- times without using plus?
+times' = lam "mn" $ var 'm' <~ (var 'n' <~ scc) <~ c 0
 
 -- Exercise 5.2.4
 power = lam "mn" $ var 'n' <~ (times <~ var 'm') <~ c 1
@@ -295,8 +295,14 @@ factorial = fix <~ (lam "fn" $
 
 -- Exercise 5.2.11
 
-sumlist = fix <~ (lam "ft" $
+-- a slow version based on explicitly destructuring the list
+sumlist' = fix <~ (lam "ft" $
                     test <~ (isnil <~ var 't')
                          <~ c 0
                          <~ (plus <~ (head <~ var 't')
                                   <~ (var 'f' <~ (tail <~ var 't'))))
+
+-- better: a 'list' is just a foldr function: we can call it with plus and 0
+--    (λc. λn. c x (c y n)) + 0
+--  > + x (+ y 0)
+sumlist = lam "t" $ var 't' <~ plus <~ c 0

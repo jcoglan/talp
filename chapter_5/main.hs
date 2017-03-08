@@ -84,9 +84,9 @@ main = do
   section '-'
   normal $ scc <~ c 3
   section '-'
-  byValue $ scc2 <~ c 3
+  byValue $ scc' <~ c 3
   section '-'
-  normal $ scc2 <~ c 3
+  normal $ scc' <~ c 3
 
   section '='
   putStrLn "[Plus]"
@@ -101,3 +101,4 @@ main = do
   section '='
   putStrLn "[Power]"
   normal $ power <~ c 3 <~ c 2
+
