@@ -1,5 +1,7 @@
 import Prelude hiding (and, or, not, fst, snd)
 import Lambda
+import Eval
+import Runtime
 
 
 byValue = eval callByValue print

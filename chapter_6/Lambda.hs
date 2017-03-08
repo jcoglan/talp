@@ -61,10 +61,10 @@ deBruijn bound (CVar x)         =  var (elemIndex x bound)
     var Nothing                 =  CVar x
 deBruijn _ t                    =  t
 
-var c = CVar c
-
 lam (c:[]) b = deBruijn [] $ Lambda c b
 lam (c:cs) b = deBruijn [] $ Lambda c $ lam cs b
+
+var c = CVar c
 
 f <~ a = Apply f a
 infixl 1 <~
