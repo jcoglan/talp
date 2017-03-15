@@ -37,17 +37,17 @@ betaReduce (Apply (Lambda _ body) arg) = sub 0 body
     sub n (Apply f arg)       =  Apply (sub n f) (sub n arg)
     sub n (Lambda x body)     =  Lambda x $ sub (n + 1) body
     sub n t@(IVar m)
-      | m == n                =  renum n 0 arg
+      | m == n                =  shift n 0 arg
       | m > n                 =  IVar (m - 1)
       | otherwise             =  t
     sub _ t                   =  t
 
-    renum n d (Apply f arg)   =  Apply (renum n d f) (renum n d arg)
-    renum n d (Lambda x body) =  Lambda x $ renum n (d + 1) body
-    renum n d t@(IVar m)
+    shift n d (Apply f arg)   =  Apply (shift n d f) (shift n d arg)
+    shift n d (Lambda x body) =  Lambda x $ shift n (d + 1) body
+    shift n d t@(IVar m)
       | m >= d                =  IVar (m + n)
       | otherwise             =  t
-    renum _ _ t               =  t
+    shift _ _ t               =  t
 
 betaReduce t                  =  t
 
