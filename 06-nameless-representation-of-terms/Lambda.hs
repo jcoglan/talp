@@ -31,21 +31,21 @@ instance Show LTerm where
 
 
 betaReduce :: LTerm -> LTerm
-betaReduce (Apply (Lambda _ body) arg) = sub 0 body
+betaReduce (Apply (Lambda _ body) s) = sub 0 body
   where
     sub                       :: Int -> LTerm -> LTerm
-    sub n (Apply f arg)       =  Apply (sub n f) (sub n arg)
-    sub n (Lambda x body)     =  Lambda x $ sub (n + 1) body
-    sub n t@(IVar m)
-      | m == n                =  shift n 0 arg
-      | m > n                 =  IVar (m - 1)
+    sub j (Apply f arg)       =  Apply (sub j f) (sub j arg)
+    sub j (Lambda x body)     =  Lambda x $ sub (j + 1) body
+    sub j t@(IVar k)
+      | k == j                =  shift j 0 s
+      | k > j                 =  IVar (k - 1)
       | otherwise             =  t
     sub _ t                   =  t
 
-    shift n d (Apply f arg)   =  Apply (shift n d f) (shift n d arg)
-    shift n d (Lambda x body) =  Lambda x $ shift n (d + 1) body
-    shift n d t@(IVar m)
-      | m >= d                =  IVar (m + n)
+    shift d c (Apply f arg)   =  Apply (shift d c f) (shift d c arg)
+    shift d c (Lambda x body) =  Lambda x $ shift d (c + 1) body
+    shift d c t@(IVar k)
+      | k >= c                =  IVar (k + d)
       | otherwise             =  t
     shift _ _ t               =  t
 
